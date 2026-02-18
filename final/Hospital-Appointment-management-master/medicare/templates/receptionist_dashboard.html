@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="fas fa-user-tie me-2"></i>Receptionist Dashboard</h2>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h5 class="mb-0"><i class="fas fa-list me-2"></i>All Appointments</h5>
+    </div>
+    <div class="card-body">
+        {% if appointments %}
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Patient</th>
+                        <th>Doctor</th>
+                        <th>Hospital</th>
+                        <th>Specialization</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Status</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for a in appointments %}
+                    <tr>
+                        <td>{{ a.patient_name }}</td>
+                        <td>{{ a.doctor_name }}</td>
+                        <td>{{ a.hospital_name }}</td>
+                        <td>{{ a.specialization }}</td>
+                        <td>{{ a.date }}</td>
+                        <td>{{ a.time }}</td>
+                        <td>
+                            <span class="badge 
+                                {% if a.status == 'Confirmed' %}bg-success
+                                {% elif a.status == 'Pending' %}bg-warning
+                                {% elif a.status == 'Completed' %}bg-success
+                                {% elif a.status == 'Cancelled' %}bg-danger
+                                {% else %}bg-secondary{% endif %}">
+                                {{ a.status }}
+                            </span>
+                        </td>
+                        <td class="text-end">
+                            <div class="d-inline-flex gap-2">
+                                {% if a.status == 'Pending' %}
+                                <form method="post" action="{{ url_for('confirm_appointment', appointment_id=a.id) }}">
+                                    <button type="submit" class="btn btn-sm btn-primary">
+                                        <i class="fas fa-check me-1"></i> Confirm
+                                    </button>
+                                </form>
+                                {% endif %}
+                                <a class="btn btn-sm btn-outline-warning" href="{{ url_for('reschedule_appointment', appointment_id=a.id) }}">
+                                    <i class="fas fa-calendar-alt me-1"></i> Reschedule
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="text-center text-muted py-5">No appointments found.</div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,138 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="fas fa-user-circle me-2"></i>Patient Dashboard</h2>
+    <a class="btn btn-primary" href="{{ url_for('book') }}">
+        <i class="fas fa-calendar-plus me-2"></i>Book Appointment
+    </a>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-3 mb-3">
+        <div class="stats-card">
+            <div class="stats-number">{{ appointments|length }}</div>
+            <div>Total Appointments</div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="stats-card">
+            <div class="stats-number">{{ appointments|selectattr('status', 'equalto', 'Pending')|list|length }}</div>
+            <div>Pending</div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="stats-card">
+            <div class="stats-number">{{ appointments|selectattr('status', 'equalto', 'Completed')|list|length }}</div>
+            <div>Completed</div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="stats-card">
+            <div class="stats-number">{{ appointments|selectattr('status', 'equalto', 'Cancelled')|list|length }}</div>
+            <div>Cancelled</div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-calendar-alt me-2"></i>My Appointments</h5>
+            </div>
+            <div class="card-body">
+                {% if appointments %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Time</th>
+                                    <th>Doctor</th>
+                                    <th>Hospital</th>
+                                    <th>Specialization</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for a in appointments %}
+                                <tr>
+                                    <td>{{ a.date }}</td>
+                                    <td>{{ a.time }}</td>
+                                    <td>{{ a.doctor_name or 'N/A' }}</td>
+                                    <td>{{ a.hospital_name or 'N/A' }}</td>
+                                    <td>{{ a.specialization or 'N/A' }}</td>
+                                    <td>
+                                        <span class="badge 
+                                            {% if a.status == 'Confirmed' %}bg-success
+                                            {% elif a.status == 'Pending' %}bg-warning
+                                            {% elif a.status == 'Completed' %}bg-success
+                                            {% elif a.status == 'Cancelled' %}bg-danger
+                                            {% else %}bg-secondary{% endif %}">
+                                            {{ a.status }}
+                                        </span>
+                                    </td>
+                                    <td class="text-end">
+                                        <a class="btn btn-sm btn-outline-primary me-2" href="{{ url_for('download_receipt', appointment_id=a.id) }}">
+                                            <i class="fas fa-file-pdf me-1"></i> Download PDF
+                                        </a>
+                                        <a class="btn btn-sm btn-outline-warning" href="{{ url_for('reschedule_appointment', appointment_id=a.id) }}">
+                                            <i class="fas fa-calendar-alt me-1"></i> Reschedule
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="text-center py-5">
+                        <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
+                        <h5 class="text-muted">No appointments yet</h5>
+                        <p class="text-muted">Book your first appointment to get started</p>
+                        <a href="{{ url_for('book') }}" class="btn btn-primary">
+                            <i class="fas fa-calendar-plus me-2"></i>Book Now
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-hospital me-2"></i>Quick Actions</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a href="{{ url_for('book') }}" class="btn btn-outline-primary">
+                        <i class="fas fa-calendar-plus me-2"></i>Book Appointment
+                    </a>
+                    <a href="{{ url_for('doctors') }}" class="btn btn-outline-info">
+                        <i class="fas fa-user-md me-2"></i>Find Doctors
+                    </a>
+                    <a href="{{ url_for('hospitals') }}" class="btn btn-outline-success">
+                        <i class="fas fa-hospital me-2"></i>View Hospitals
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-info-circle me-2"></i>Health Tips</h5>
+            </div>
+            <div class="card-body">
+                <ul class="list-unstyled">
+                    <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Stay hydrated</li>
+                    <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Get regular exercise</li>
+                    <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Eat a balanced diet</li>
+                    <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Get enough sleep</li>
+                    <li class="mb-0"><i class="fas fa-check text-success me-2"></i>Regular health checkups</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

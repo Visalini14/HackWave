@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-body p-5">
+                <div class="text-center mb-4">
+                    <i class="fas fa-calendar-plus fa-4x text-primary mb-3"></i>
+                    <h2 class="fw-bold">Book Appointment</h2>
+                    <p class="text-muted">Schedule your appointment with our expert doctors</p>
+                </div>
+                
+                <form method="post">
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <label for="doctor_id" class="form-label fw-semibold">
+                                <i class="fas fa-user-md me-2"></i>Select Doctor
+                            </label>
+                            <select name="doctor_id" id="doctor_id" class="form-select" required onchange="updateHospitalAndSpecialization()">
+                                <option value="">Choose a doctor</option>
+                                {% for doctor in doctors %}
+                                <option value="{{ doctor.id }}" 
+                                        data-hospital="{{ doctor.hospital_id }}" 
+                                        data-specialization="{{ doctor.specialization_english }}"
+                                        data-hospital-name="{{ doctor.hospital_name }}">
+                                    {{ doctor.name }} - {{ doctor.specialization_english }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        
+                        <div class="col-md-6 mb-4">
+                            <label for="hospital_id" class="form-label fw-semibold">
+                                <i class="fas fa-hospital me-2"></i>Hospital
+                            </label>
+                            <input type="hidden" name="hospital_id" id="hospital_id" required>
+                            <input type="text" id="hospital_display" class="form-control" readonly placeholder="Select a doctor first">
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <label for="specialization" class="form-label fw-semibold">
+                                <i class="fas fa-stethoscope me-2"></i>Specialization
+                            </label>
+                            <input type="text" name="specialization" id="specialization" class="form-control" readonly placeholder="Select a doctor first">
+                        </div>
+                        
+                        <div class="col-md-6 mb-4">
+                            <label for="date" class="form-label fw-semibold">
+                                <i class="fas fa-calendar me-2"></i>Date
+                            </label>
+                            <input type="date" name="date" id="date" class="form-control" required min="{{ today }}">
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <label for="time" class="form-label fw-semibold">
+                                <i class="fas fa-clock me-2"></i>Time
+                            </label>
+                            <input type="time" name="time" id="time" class="form-control" required>
+                        </div>
+                    </div>
+                    
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="fas fa-calendar-check me-2"></i>Book Appointment
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function updateHospitalAndSpecialization() {
+    const doctorSelect = document.getElementById('doctor_id');
+    const selectedOption = doctorSelect.options[doctorSelect.selectedIndex];
+    
+    if (selectedOption.value) {
+        document.getElementById('hospital_id').value = selectedOption.dataset.hospital;
+        document.getElementById('hospital_display').value = selectedOption.dataset.hospitalName;
+        document.getElementById('specialization').value = selectedOption.dataset.specialization;
+    } else {
+        document.getElementById('hospital_id').value = '';
+        document.getElementById('hospital_display').value = '';
+        document.getElementById('specialization').value = '';
+    }
+}
+
+// Set minimum date to today
+document.getElementById('date').min = new Date().toISOString().split('T')[0];
+</script>
+{% endblock %}

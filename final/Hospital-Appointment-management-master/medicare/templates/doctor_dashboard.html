@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="fas fa-user-md me-2"></i>Doctor Dashboard</h2>
+    <div>
+        <a href="{{ url_for('doctors') }}" class="btn btn-outline-info me-2">
+            <i class="fas fa-search me-1"></i>Find Doctors
+        </a>
+        <a href="{{ url_for('hospitals') }}" class="btn btn-outline-success">
+            <i class="fas fa-hospital me-1"></i>View Hospitals
+        </a>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-3 mb-3">
+        <div class="stats-card">
+            <div class="stats-number">{{ appointments|length }}</div>
+            <div>Total Appointments</div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="stats-card">
+            <div class="stats-number">{{ appointments|selectattr('status', 'equalto', 'Scheduled')|list|length }}</div>
+            <div>Scheduled</div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="stats-card">
+            <div class="stats-number">{{ appointments|selectattr('status', 'equalto', 'Completed')|list|length }}</div>
+            <div>Completed</div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="stats-card">
+            <div class="stats-number">{{ appointments|selectattr('status', 'equalto', 'Cancelled')|list|length }}</div>
+            <div>Cancelled</div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-calendar-alt me-2"></i>Patient Appointments</h5>
+            </div>
+            <div class="card-body">
+                {% if appointments %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Patient Name</th>
+                                    <th>Date</th>
+                                    <th>Time</th>
+                                    <th>Specialization</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for a in appointments %}
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <i class="fas fa-user-circle fa-2x text-primary me-3"></i>
+                                            <div>
+                                                <strong>{{ a.patient_name }}</strong>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>{{ a.date }}</td>
+                                    <td>{{ a.time }}</td>
+                                    <td>
+                                        <span class="badge bg-info">{{ a.specialization or 'N/A' }}</span>
+                                    </td>
+                                    <td>
+                                        <span class="badge 
+                                            {% if a.status == 'Confirmed' %}bg-success
+                                            {% elif a.status == 'Pending' %}bg-warning
+                                            {% elif a.status == 'Completed' %}bg-success
+                                            {% elif a.status == 'Cancelled' %}bg-danger
+                                            {% else %}bg-secondary{% endif %}">
+                                            {{ a.status }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        {% if a.status in ['Scheduled', 'Pending'] %}
+                                        <button class="btn btn-sm btn-warning me-1" 
+                                                onclick="window.location.href='{{ url_for('reschedule_appointment', appointment_id=a.id) }}'"
+                                                title="Reschedule Appointment">
+                                            <i class="fas fa-calendar-edit"></i> Reschedule
+                                        </button>
+                                        {% endif %}
+                                        <a href="{{ url_for('download_receipt', appointment_id=a.id) }}" 
+                                           class="btn btn-sm btn-info"
+                                           title="Download Receipt">
+                                            <i class="fas fa-file-pdf"></i> Receipt
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="text-center py-5">
+                        <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
+                        <h5 class="text-muted">No appointments scheduled</h5>
+                        <p class="text-muted">Appointments will appear here when patients book with you</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function updateStatus(appointmentId, status) {
+    if (confirm(`Are you sure you want to mark this appointment as ${status}?`)) {
+        // In a real application, you would make an AJAX call here
+        // For now, we'll just show an alert
+        alert(`Appointment status updated to ${status}`);
+        // You would typically reload the page or update the UI here
+    }
+}
+</script>
+{% endblock %}

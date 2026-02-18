@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
+        <div class="card">
+            <div class="card-body p-5">
+                <div class="text-center mb-4">
+                    <i class="fas fa-user-circle fa-4x text-primary mb-3"></i>
+                    <h2 class="fw-bold">Welcome Back</h2>
+                    <p class="text-muted">Sign in to your MediCare account</p>
+                </div>
+                
+                <form method="post" autocomplete="off" novalidate>
+                    <input type="hidden" name="prevent_autofill" value="{{ csrf_token | default('') }}">
+                    <div class="mb-4">
+                        <label for="email" class="form-label fw-semibold">
+                            <i class="fas fa-envelope me-2"></i>Email Address
+                        </label>
+                        <input type="email" name="email" id="email" placeholder="Enter your email" class="form-control" required autocomplete="username" autocapitalize="none" autocorrect="off" spellcheck="false" inputmode="email">
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="password" class="form-label fw-semibold">
+                            <i class="fas fa-lock me-2"></i>Password
+                        </label>
+                        <input type="password" name="password" id="password" placeholder="Enter your password" class="form-control" required autocomplete="current-password" autocapitalize="none" autocorrect="off" spellcheck="false" minlength="8">
+                    </div>
+                    
+                    <div class="d-grid mb-4">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="fas fa-sign-in-alt me-2"></i>Sign In
+                        </button>
+                    </div>
+                </form>
+                
+                <div class="text-center">
+                    <p class="text-muted">Don't have an account? 
+                        <a href="{{ url_for('register') }}" class="text-primary fw-semibold text-decoration-none">
+                            Create one here
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

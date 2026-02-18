@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="fas fa-hospital me-2"></i>Our Hospitals</h2>
+    <a href="{{ url_for('doctors') }}" class="btn btn-outline-info">
+        <i class="fas fa-user-md me-1"></i>View Doctors
+    </a>
+</div>
+
+<div class="row">
+    {% for hospital in hospitals %}
+    <div class="col-md-6 col-lg-4 mb-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <div class="d-flex align-items-center mb-3">
+                    <i class="fas fa-hospital fa-3x text-primary me-3"></i>
+                    <div>
+                        <h5 class="card-title mb-1">{{ hospital.name }}</h5>
+                        <p class="text-muted mb-0">{{ hospital.location }}</p>
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="text-muted">Doctor Available:</span>
+                        <span class="badge bg-primary">1</span>
+                    </div>
+                    {% if hospital.doctor_name %}
+                    <div class="bg-light p-3 rounded">
+                        <h6 class="mb-1"><i class="fas fa-user-md me-2"></i>{{ hospital.doctor_name }}</h6>
+                        <p class="mb-1 text-muted">{{ hospital.specialization_english }}</p>
+                        {% if hospital.specialization_tamil %}
+                        <p class="mb-0 text-muted small">{{ hospital.specialization_tamil }}</p>
+                        {% endif %}
+                    </div>
+                    {% else %}
+                    <div class="bg-light p-3 rounded text-center">
+                        <p class="text-muted mb-0">No doctor assigned</p>
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <div class="mb-3">
+                    <p class="text-muted mb-1">
+                        <i class="fas fa-phone me-2"></i>{{ hospital.contact }}
+                    </p>
+                </div>
+                
+                <div class="d-grid">
+                    <a href="{{ url_for('doctors') }}?hospital={{ hospital.name }}" class="btn btn-outline-primary">
+                        <i class="fas fa-user-md me-2"></i>View Doctors
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+{% if not hospitals %}
+<div class="text-center py-5">
+    <i class="fas fa-hospital fa-3x text-muted mb-3"></i>
+    <h5 class="text-muted">No hospitals found</h5>
+    <p class="text-muted">Please check back later for hospital listings</p>
+</div>
+{% endif %}
+{% endblock %}

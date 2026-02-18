@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="hero-section">
+    <h1><i class="fas fa-heartbeat me-3"></i>Welcome to MediCare</h1>
+    <p>Your trusted healthcare partner for quality medical services and seamless appointment management</p>
+    <div class="mt-4">
+        <a href="{{ url_for('login') }}" class="btn btn-light btn-lg me-3">
+            <i class="fas fa-sign-in-alt me-2"></i>Login
+        </a>
+        <a href="{{ url_for('register') }}" class="btn btn-outline-light btn-lg">
+            <i class="fas fa-user-plus me-2"></i>Register
+        </a>
+    </div>
+</div>
+
+<div class="row mb-5">
+    <div class="col-md-4 mb-4">
+        <div class="feature-card">
+            <div class="feature-icon">
+                <i class="fas fa-calendar-check"></i>
+            </div>
+            <h4>Easy Booking</h4>
+            <p class="text-muted">Book appointments with your preferred doctors quickly and conveniently</p>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="feature-card">
+            <div class="feature-icon">
+                <i class="fas fa-user-md"></i>
+            </div>
+            <h4>Expert Doctors</h4>
+            <p class="text-muted">Access to qualified specialists across various medical fields</p>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="feature-card">
+            <div class="feature-icon">
+                <i class="fas fa-shield-alt"></i>
+            </div>
+            <h4>Secure & Private</h4>
+            <p class="text-muted">Your medical information is protected with advanced security measures</p>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-3 mb-4">
+        <div class="stats-card">
+            <div class="stats-number">500+</div>
+            <div>Happy Patients</div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-4">
+        <div class="stats-card">
+            <div class="stats-number">50+</div>
+            <div>Expert Doctors</div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-4">
+        <div class="stats-card">
+            <div class="stats-number">10+</div>
+            <div>Specializations</div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-4">
+        <div class="stats-card">
+            <div class="stats-number">24/7</div>
+            <div>Support</div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-5">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body text-center p-5">
+                <h3 class="mb-3">Ready to Get Started?</h3>
+                <p class="text-muted mb-4">Join thousands of patients who trust MediCare for their healthcare needs</p>
+                <a href="{{ url_for('register') }}" class="btn btn-primary btn-lg">
+                    <i class="fas fa-rocket me-2"></i>Get Started Now
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

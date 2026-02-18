@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="fas fa-user-md me-2"></i>Our Doctors</h2>
+    <a href="{{ url_for('hospitals') }}" class="btn btn-outline-success">
+        <i class="fas fa-hospital me-1"></i>View Hospitals
+    </a>
+</div>
+
+{% if hospital %}
+<div class="alert alert-info mb-4">
+    <i class="fas fa-hospital me-2"></i>Showing doctors from: <strong>{{ hospital }}</strong>
+    <a href="{{ url_for('doctors') }}" class="btn btn-sm btn-outline-primary ms-2">
+        <i class="fas fa-times me-1"></i>Clear Filter
+    </a>
+</div>
+{% endif %}
+
+<div class="row mb-4">
+    <div class="col-md-6">
+        <form method="get" class="d-flex">
+            {% if hospital %}
+            <input type="hidden" name="hospital" value="{{ hospital }}">
+            {% endif %}
+            <input type="text" name="specialization" class="form-control me-2" 
+                   placeholder="Search by specialization..." value="{{ specialization }}">
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-search"></i>
+            </button>
+        </form>
+    </div>
+    <div class="col-md-6 text-end">
+        <span class="text-muted">{{ doctors|length }} doctor(s) found</span>
+    </div>
+</div>
+
+<div class="row">
+    {% for doctor in doctors %}
+    <div class="col-md-6 col-lg-4 mb-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <div class="d-flex align-items-center mb-3">
+                    <i class="fas fa-user-md fa-3x text-primary me-3"></i>
+                    <div>
+                        <h5 class="card-title mb-1">{{ doctor.name }}</h5>
+                        <p class="text-muted mb-0">{{ doctor.hospital_name }}</p>
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <span class="badge bg-info me-2">{{ doctor.specialization_english }}</span>
+                    {% if doctor.specialization_tamil %}
+                    <span class="badge bg-secondary">{{ doctor.specialization_tamil }}</span>
+                    {% endif %}
+                </div>
+                
+                <div class="mb-3">
+                    <p class="text-muted mb-1">
+                        <i class="fas fa-envelope me-2"></i>{{ doctor.email }}
+                    </p>
+                    <p class="text-muted mb-0">
+                        <i class="fas fa-phone me-2"></i>{{ doctor.contact }}
+                    </p>
+                </div>
+                
+                <div class="d-grid">
+                    {% if session.get('role') == 'patient' %}
+                    <a href="{{ url_for('book') }}" class="btn btn-primary">
+                        <i class="fas fa-calendar-plus me-2"></i>Book Appointment
+                    </a>
+                    {% else %}
+                    <button class="btn btn-outline-primary" disabled>
+                        <i class="fas fa-info-circle me-2"></i>Contact for Details
+                    </button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+{% if not doctors %}
+<div class="text-center py-5">
+    <i class="fas fa-user-md fa-3x text-muted mb-3"></i>
+    <h5 class="text-muted">No doctors found</h5>
+    <p class="text-muted">
+        {% if specialization %}
+            No doctors found for "{{ specialization }}". Try a different specialization.
+        {% else %}
+            Please check back later for doctor listings.
+        {% endif %}
+    </p>
+    {% if specialization %}
+    <a href="{{ url_for('doctors') }}" class="btn btn-primary">
+        <i class="fas fa-list me-2"></i>View All Doctors
+    </a>
+    {% endif %}
+</div>
+{% endif %}
+{% endblock %}
